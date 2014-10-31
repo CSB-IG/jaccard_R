@@ -22,14 +22,6 @@ for(i in file_list){
 
 #Ahora hagamos una lista de todos esos archivos con sus nombres 
 lista_pw<-names(Pathways)
-#lista_pw<-lista_pw[!lista_pw == "file_list"]
-#lista_pw<-lista_pw[!lista_pw == "Pathways"]
-#Debe haber una forma más elegante de leer todos los objetos MENOS 
-#"file_list" pero no se me ocurre ahora. Así funciona.
-
-#Sacar una lista de todos los pares de pathways
-combi<-combn(Pathways, 2)
-
 #Calcula el indice de Jaccard para dos conjuntos
 jaccard<-function(a,b)
 {
@@ -40,18 +32,19 @@ jaccard<-function(a,b)
   J<-as.numeric(nx/ny)
   print(J)
 }
-#probemos Jaccard 
+#Para probar Jaccard 
 
 #Prueba<-jaccard(combi[1,9], combi[2,9])
-gatos<-c("Garfield", "Heathcliff", "López", "Catdog", "Félix")
-perros<-c("Pluto", "Underdog", "Catdog")
-rueba<-jaccard(perros, gatos)
-#rueba debe ser 0.1428
+#gatos<-c("Garfield", "Heathcliff", "López", "Catdog", "Félix")
+#perros<-c("Pluto", "Underdog", "Catdog")
+#prueba<-jaccard(perros, gatos)
+#prueba debe ser 0.1428
 
 #Funcion para calcular Jaccard de 1 PW vs todos los demás
 
 #funcion para calcular Jaccard de un elemento en una lista con todos los 
 #elementos de la lista
+###Daniel Terán y Sergio Alcalá colaboraron para que funcionen los loops
 jaccard_1_elemento_lista<-function(x, Pathways)
   #x es un elemento de la lista (1 pathway)
   #Pathways es la lista 
@@ -64,12 +57,12 @@ jaccard_1_elemento_lista<-function(x, Pathways)
     q<-jaccard(x,i) #calcula el índice de jaccard para x y un PW i
     js<-c(js, q) # agrega el indice de Jaccard x-i a la lista 
   }
-  #print("interludio musical: ¡gatitos y unicornios!")
+  
   js<-(as.matrix(js)) #convierte la lista de js en matriz
   #print(js)
   #print(df)
   resultado<-cbind(df, js) #junta los resultados con el PW en una matriz
-  #print("Otro interludio musical. Ahora con más gatitos!")
+  
   print(resultado)
   
 }
@@ -109,4 +102,4 @@ jacko<-function(PW){
   lapply(PW, wacko)
 }
 #probemos
-jacko(Pathways)
+#jacko(Pathways)
