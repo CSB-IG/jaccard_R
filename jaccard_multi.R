@@ -1,19 +1,15 @@
-#Cálculo del índice de Jaccard para un conjunto de Pathways
-#Este programa lee todos los archivos de una carpeta (que son pathways),
-#y saca el índice de Jaccard de todos contra todos. 
+#Jaccard
+#Reads all pathway files in a directory,
+#Calculates Jaccard index between every pair. 
 
-#Primero leemos los archivos de la carpeta.
+#Read the folder.
 
-#Como está el programa hay que correrlo en una carpeta que NADA MÁS tenga los 
-#archivos de interés. Seguro se puede generalizar pero no es de interés ahora
-##los archivos deben ser listas, de igual longitud. 
-###para Pathways del BROAD, usar el "Cortador" para quitarles los comentarios
 file_list<-list.files()
 Pathways<-list()
-#Este for loop va a leer todos los archivos de la lista de archivos. 
+
 for(i in file_list){
   x<-as.matrix(read.table(i, header=TRUE))
-  assign(paste(colnames(x)), x) ##nombre de columna = nombre variable
+  assign(paste(colnames(x)), i) ##nombre de columna = nombre variable
   y<-(read.table(i, header=TRUE))
   Pathways<-c(Pathways, y)
   rm(x)
@@ -32,74 +28,49 @@ jaccard<-function(a,b)
   J<-as.numeric(nx/ny)
   print(J)
 }
-#Para probar Jaccard 
 
-#Prueba<-jaccard(combi[1,9], combi[2,9])
-#gatos<-c("Garfield", "Heathcliff", "López", "Catdog", "Félix")
-#perros<-c("Pluto", "Underdog", "Catdog")
-#prueba<-jaccard(perros, gatos)
-#prueba debe ser 0.1428
-
-#Funcion para calcular Jaccard de 1 PW vs todos los demás
-
-#funcion para calcular Jaccard de un elemento en una lista con todos los 
-#elementos de la lista
-###Daniel Terán y Sergio Alcalá colaboraron para que funcionen los loops
+###Daniel Terán  Sergio Alcalá: Credit for loops
 jaccard_1_elemento_lista<-function(x, Pathways)
-  #x es un elemento de la lista (1 pathway)
-  #Pathways es la lista 
+
 {
-  df<-matrix(names(Pathways)) #genera una matriz con los nombres de PW
-  js<-NULL #va a contener los valores de Jaccard
+  df<-matrix(names(Pathways)) 
+  js<-NULL 
   
-  for(i in Pathways) #for loop para todos los elementos en la lista
+  for(i in Pathways) 
   {
-    q<-jaccard(x,i) #calcula el índice de jaccard para x y un PW i
-    js<-c(js, q) # agrega el indice de Jaccard x-i a la lista 
+    q<-jaccard(x,i) 
+    js<-c(js, q) 
   }
   
-  js<-(as.matrix(js)) #convierte la lista de js en matriz
-  #print(js)
-  #print(df)
-  resultado<-cbind(df, js) #junta los resultados con el PW en una matriz
+  js<-(as.matrix(js))
+  
+  resultado<-cbind(df, js) 
   
   print(resultado)
   
 }
 
-#probemos
-#jaccard_1_elemento_lista(Pathways$BIOCARTA_WNT_PATHWAY, Pathways)
-
-##Jaccard para la lista de PWs
-
-#Usamos dos funciones: Wacko y Jacko
-
-#Wacko es igual a jaccard_1_elemento_lista pero toma los PW del ambiente
-
-wacko<-function(x)
-  #x es un elemento de la lista (1 pathway)
-  #piwis es la lista de Pathways definida en el ambiente
+wk<-function(x)
+ 
 {
   piwis<-Pathways
-  df<-matrix(names(piwis)) #genera una matriz con los nombres de PW
-  js<-NULL #va a contener los valores de Jaccard
+  df<-matrix(names(piwis))
+  js<-NULL 
   
-  for(i in piwis) #for loop para todos los elementos en la lista
+  for(i in piwis) 
   {
-    q<-jaccard(x,i) #calcula el índice de jaccard para x y un PW i
-    js<-c(js, q) # agrega el indice de Jaccard x-i a la lista 
+    q<-jaccard(x,i) 
+    js<-c(js, q) 
   }
-  js<-(as.matrix(js)) #convierte la lista de js en matriz
-  #print(js)
-  #print(df)
-  resultado<-cbind(df, js) #junta los resultados con el PW en una matriz
+  js<-(as.matrix(js))
+  resultado<-cbind(df, js) 
   print(resultado)
 }
 
-#Jacko
-jacko<-function(PW){
+
+jck<-function(PW){
   #PW es la lista de genes 
-  lapply(PW, wacko)
+  lapply(PW, wk)
 }
-#probemos
-#jacko(Pathways)
+
+jck(Pathways)
